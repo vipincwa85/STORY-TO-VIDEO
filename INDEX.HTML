@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AI Video Generator</title>
+<style>
+body { font-family: Arial; text-align:center; }
+#app { display:none; }
+textarea { width:80%; height:120px; }
+button { padding:10px; margin:5px; }
+</style>
+</head>
+
+<body>
+
+<h1>🎬 AI Video Generator</h1>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <input id="user" placeholder="Username"><br><br>
+  <input id="pass" type="password" placeholder="Password"><br><br>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+<h3>Enter Story</h3>
+<textarea id="story"></textarea>
+
+<h3>Settings</h3>
+<select id="duration">
+  <option value="5">Short</option>
+  <option value="10">Medium</option>
+  <option value="20">Long</option>
+</select>
+
+<select id="orientation">
+  <option>Horizontal</option>
+  <option>Vertical</option>
+</select>
+
+<br><br>
+<button onclick="generateVideo()">🎬 Generate Video</button>
+
+<p id="status"></p>
+
+</div>
+
+<script>
+function login(){
+  let u=user.value;
+  let p=pass.value;
+
+  if(u==="taneeshvpsvideo" && p==="taneeshvpsvideo"){
+    loginBox.style.display="none";
+    app.style.display="block";
+  }
+  else if(p==="TMISHRAWEBSTORYAI"){
+    alert("Admin Access Granted");
+    loginBox.style.display="none";
+    app.style.display="block";
+  }
+  else{
+    alert("Wrong login");
+  }
+}
+
+async function generateVideo(){
+  status.innerText="⏳ Creating video...";
+
+  let res=await fetch("https://YOUR-BACKEND.onrender.com/video",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({text:story.value})
+  });
+
+  let blob=await res.blob();
+  let url=URL.createObjectURL(blob);
+
+  let a=document.createElement("a");
+  a.href=url;
+  a.download="video.mp4";
+  a.click();
+
+  status.innerText="✅ Done!";
+}
+</script>
+
+</body>
+</html>
